@@ -5,6 +5,14 @@ const staticMiddleware = require('./static-middleware');
 
 const app = express();
 
+const pg = require('pg');
+const db = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 app.use(staticMiddleware);
 
 app.use(errorMiddleware);
