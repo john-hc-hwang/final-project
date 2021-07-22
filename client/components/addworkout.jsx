@@ -45,6 +45,7 @@ export default class AddWorkout extends React.Component {
     this.setState({ rest: event.target.value });
   }
 
+  // maybe send these states to database?
   handleSubmit(event) {
     this.setState({
       exercise: '',
@@ -87,11 +88,7 @@ export default class AddWorkout extends React.Component {
   render() {
     return (
       <>
-        <button
-        onClick={ this.toggleState }
-        className="main-button">
-          Add Workout
-        </button>
+        <button onClick={ this.toggleState } className="main-button">Add Workout</button>
         { this.showModal() }
       </>
     );
