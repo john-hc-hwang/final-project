@@ -1,8 +1,10 @@
 import React from 'react';
+import Calendar from 'react-calendar';
 export default class AddWorkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      date: new Date(),
       addModalActive: false,
       exercise: '',
       weight: '',
@@ -11,6 +13,8 @@ export default class AddWorkout extends React.Component {
       rest: ''
     };
 
+    this.setDate = this.setDate.bind(this);
+    this.getDate = this.getDate.bind(this);
     this.toggleState = this.toggleState.bind(this);
     this.setExercise = this.setExercise.bind(this);
     this.setWeight = this.setWeight.bind(this);
@@ -19,6 +23,30 @@ export default class AddWorkout extends React.Component {
     this.setRest = this.setRest.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.showModal = this.showModal.bind(this);
+  }
+
+  setDate(target) {
+    this.setState({ date: target });
+  }
+
+  getDate() {
+    let month = '';
+    let day = '';
+
+    if ((this.state.date.getMonth() + 1).toString().length < 2) {
+      month = `0${this.state.date.getMonth() + 1}`;
+    } else {
+      month = this.state.date.getMonth() + 1;
+    }
+
+    if ((this.state.date.getDate()).toString().length < 2) {
+      day = `0${this.state.date.getDate()}`;
+    } else {
+      day = this.state.date.getDate();
+    }
+
+    const date = `${month} ${day} ${this.state.date.getFullYear()}`;
+    return date;
   }
 
   toggleState() {
@@ -68,7 +96,7 @@ export default class AddWorkout extends React.Component {
               <p className="modal-title">New Workout</p>
               <button className="modal-button">Add</button>
             </div>
-            <p className="modal-date">07 21 2021</p>
+            <p className="modal-date">{ this.getDate() }</p>
             <label htmlFor="exerciseInput">Exercise Name</label>
             <input required id="exerciseInput" type="text" value={ this.state.exercise } onChange={ this.setExercise }/>
             <label htmlFor="weightInput">Weight (lbs)</label>
@@ -90,6 +118,7 @@ export default class AddWorkout extends React.Component {
       <>
         <button onClick={ this.toggleState } className="main-button">Add Workout</button>
         { this.showModal() }
+        <Calendar onChange={this.setDate} value={this.state.date} />
       </>
     );
   }
