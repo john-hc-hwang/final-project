@@ -4,4 +4,63 @@
 
 body {
   margin: 0;
+  background-color: #00AEEF;
+  font-family: 'Otomanopee One', sans-serif;
+}
+
+.navbar {
+  background-color: black;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.container {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.main-heading {
+  font-family: 'Permanent Marker', cursive;
+  color: #FFDD00;
+  font-size: 2.4rem;
+  letter-spacing: 0.3rem;
+  margin: 0.2rem 0;
+}
+
+.fas.fa-align-justify {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  color: #FFDD00;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.far.fa-user {
+  margin-top: 1rem;
+  margin-right: 1rem;
+  color: #FFDD00;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.main-button {
+  font-family: 'Otomanopee One', sans-serif;
+  font-size: 1rem;
+  color: #FFDD00;
+  background-color: black;
+  padding: 0.5rem 1rem;
+  margin: 1rem 1rem;
+  border-style: none;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+@media all and (min-width: 768px) {
+  .container {
+    max-width: 900px;
+  }
 }
