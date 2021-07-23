@@ -91,6 +91,24 @@ app.post('/api/workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/workouts/:formatDate', (req, res, next) => {
+  const sql = `
+    select "workoutId", "exercise", "weight", "sets", "reps", "rest"
+    from "workouts"
+    where "date" = $1
+  `;
+
+  const date = req.params.formatDate;
+  const params = [date];
+
+  db.query(sql, params)
+    .then(result => {
+      const selectedWorkout = result.rows;
+      res.json(selectedWorkout);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
