@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #00aeef;
+  font-family: 'Otomanopee One', sans-serif;
+}
+
+.navbar {
+  background-color: black;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.container {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.main-heading {
+  font-family: 'Permanent Marker', cursive;
+  color: #fd0;
+  font-size: 2.4rem;
+  letter-spacing: 0.3rem;
+  margin: 0.2rem 0;
+}
+
+.fas.fa-align-justify {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  color: #fd0;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.far.fa-user {
+  margin-top: 1rem;
+  margin-right: 1rem;
+  color: #fd0;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.main-button {
+  font-family: 'Otomanopee One', sans-serif;
+  font-size: 1rem;
+  color: #fd0;
+  background-color: black;
+  padding: 0.5rem 1rem;
+  margin: 1rem 1rem;
+  border-style: none;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(49, 49, 49, 0.8);
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  width: 350px;
+  height: 100vh;
+  margin: 0 auto;
+  margin-top: 8rem;
+}
+
+.modal-options {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.modal-button {
+  color: #f82d00;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  background-color: white;
+  border-style: none;
+  cursor: pointer;
+  margin: 0.4rem 0.3rem;
+  font-family: 'Otomanopee One', sans-serif;
+}
+
+.modal-title {
+  font-size: 1.4rem;
+  margin: 0.4rem 0;
+}
+
+.modal-date {
+  font-size: 3.2rem;
+  margin: 1rem 0;
+}
+
+label {
+  font-size: 1.6rem;
+  margin: 0.7rem 0;
+}
+
+input {
+  font-size: 1.4rem;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.4rem;
+  border-radius: 2rem;
+}
+
+input:focus {
+  outline: none;
+}
+
+@media all and (min-width: 768px) {
+  .container {
+    max-width: 900px;
+  }
+}
