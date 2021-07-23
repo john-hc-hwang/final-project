@@ -22,7 +22,7 @@ app.use(jsonMiddleware);
 
 // app.get('/api/workout', (req, res) => {
 
-  // someId needs to be sent back with data ITS A MUST
+// someId needs to be sent back with data ITS A MUST
 //   const sql = `
 //     select
 //       "someId"
@@ -48,7 +48,7 @@ app.use(jsonMiddleware);
 //     .then(res => res.json())
 //     .then(workouts => {
 //       this.setState({ stateName: workouts })
-      // workouts is an array (result.rows)
+// workouts is an array (result.rows)
 //     });
 // }
 
@@ -71,6 +71,25 @@ app.use(jsonMiddleware);
 //   )
 // }
 // Note end
+
+app.post('/api/workouts', (req, res, next) => {
+  const sql = `
+    insert into "workouts" ("userId", "exercise", "weight", "sets", "reps", "rest", "date", "completed", "excuse")
+    values (1, $1, $2, $3, $4, $5, $6, $7, $8)
+    returning "workoutId", "exercise", "weight", "sets", "reps", "rest", "date", "completed", "excuse"
+  `;
+
+  const { exercise, weight, sets, reps, rest, date, completed, excuse } = req.body;
+
+  const params = [exercise, weight, sets, reps, rest, date, completed, excuse];
+
+  db.query(sql, params)
+    .then(result => {
+      const [newWorkout] = result.rows;
+      res.status(201).json(newWorkout);
+    })
+    .catch(err => next(err));
+});
 
 app.use(errorMiddleware);
 

@@ -4,13 +4,15 @@ export default class AddWorkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(),
       addModalActive: false,
       exercise: '',
       weight: '',
       sets: '',
       reps: '',
-      rest: ''
+      rest: '',
+      date: new Date(),
+      completed: false,
+      excuse: ''
     };
 
     this.setDate = this.setDate.bind(this);
@@ -73,8 +75,24 @@ export default class AddWorkout extends React.Component {
     this.setState({ rest: event.target.value });
   }
 
-  // maybe send these states to database?
   handleSubmit(event) {
+    const data = this.state;
+
+    fetch('/api/workouts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(workout => {
+        // console.log(workout);
+        // console.log(workout.date);
+        // 2021-07-24T00:00:00Z
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
     this.setState({
       exercise: '',
       weight: '',
