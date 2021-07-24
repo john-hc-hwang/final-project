@@ -37,6 +37,7 @@ export default class AddWorkout extends React.Component {
     this.showWorkout = this.showWorkout.bind(this);
   }
 
+  // when it mounts, fetch data and show for specific date
   componentDidMount() {
     this.getWorkout();
   }
@@ -45,6 +46,7 @@ export default class AddWorkout extends React.Component {
     this.setState({ addModalActive: !this.state.addModalActive });
   }
 
+  // make sure edit modal doesnt affect add modal!
   toggleEditModal() {
     this.setState({ editModalActive: !this.state.editModalActive }, () => {
       if (!this.state.editModalActive) {
