@@ -12,12 +12,13 @@ export default class AddWorkout extends React.Component {
       rest: '',
       date: new Date(),
       completed: false,
-      excuse: ''
+      excuse: '',
+      workouts: []
     };
 
-    this.setDate = this.setDate.bind(this);
+    this.toggleAddModal = this.toggleAddModal.bind(this);
     this.getDate = this.getDate.bind(this);
-    this.toggleState = this.toggleState.bind(this);
+    this.setDate = this.setDate.bind(this);
     this.setExercise = this.setExercise.bind(this);
     this.setWeight = this.setWeight.bind(this);
     this.setSets = this.setSets.bind(this);
@@ -25,10 +26,17 @@ export default class AddWorkout extends React.Component {
     this.setRest = this.setRest.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.showModal = this.showModal.bind(this);
+    this.getWorkout = this.getWorkout.bind(this);
+    this.mapExercise = this.mapExercise.bind(this);
+    this.showWorkout = this.showWorkout.bind(this);
   }
 
-  setDate(target) {
-    this.setState({ date: target });
+  componentDidMount() {
+    this.getWorkout();
+  }
+
+  toggleAddModal() {
+    this.setState({ addModalActive: !this.state.addModalActive });
   }
 
   getDate() {
@@ -51,8 +59,10 @@ export default class AddWorkout extends React.Component {
     return date;
   }
 
-  toggleState() {
-    this.setState({ addModalActive: !this.state.addModalActive });
+  setDate(target) {
+    this.setState({ date: target }, () => {
+      this.getWorkout();
+    });
   }
 
   setExercise(event) {
@@ -83,12 +93,6 @@ export default class AddWorkout extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-      .then(res => res.json())
-      .then(workout => {
-        // console.log(workout);
-        // console.log(workout.date);
-        // 2021-07-24T00:00:00Z
-      })
       .catch(error => {
         console.error('Error:', error);
       });
@@ -101,6 +105,8 @@ export default class AddWorkout extends React.Component {
       rest: ''
     });
 
+    this.toggleAddModal();
+    this.getWorkout();
     event.preventDefault();
   }
 
@@ -110,7 +116,7 @@ export default class AddWorkout extends React.Component {
         <form onSubmit={ this.handleSubmit } className="overlay">
           <div className="modal-container">
             <div className="modal-options">
-              <button className="modal-button" onClick={ this.toggleState }>Cancel</button>
+              <button className="modal-button" onClick={ this.toggleAddModal }>Cancel</button>
               <p className="modal-title">New Workout</p>
               <button className="modal-button">Add</button>
             </div>
@@ -131,12 +137,58 @@ export default class AddWorkout extends React.Component {
     }
   }
 
+  getWorkout() {
+    const date = this.getDate().split(' ');
+    date.unshift(date[2]);
+    date.splice(3, 1);
+    const formatDate = date.join('-');
+    const newDate = `${formatDate}T00:00:00Z`;
+
+    fetch(`/api/workouts/${newDate}`)
+      .then(res => res.json())
+      .then(workout => {
+        this.setState({ workouts: workout });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  mapExercise() {
+    const contents = this.state.workouts;
+    const contentItems = contents.map(content =>
+      <div key={ content.workoutId}>
+          <p className="workout-name">{ content.exercise }</p>
+          <p className="workout-detail"> { content.weight } lbs | { content.sets } Sets | { content.reps } Reps | { content.rest } Sec Rest</p>
+      </div>
+    );
+
+    return contentItems;
+  }
+
+  showWorkout() {
+    if (this.state.workouts.length === 0) {
+      return (
+        <div className="workout-container">
+          <p className="workout-none">No workouts added</p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="workout-container">
+          { this.mapExercise() }
+        </div>
+      );
+    }
+  }
+
   render() {
     return (
       <>
-        <button onClick={ this.toggleState } className="main-button">Add Workout</button>
+        <button onClick={ this.toggleAddModal } className="main-button">Add Workout</button>
         { this.showModal() }
-        <Calendar onChange={this.setDate} value={this.state.date} />
+        <Calendar onChange={ this.setDate } value={this.state.date} />
+        { this.showWorkout() }
       </>
     );
   }

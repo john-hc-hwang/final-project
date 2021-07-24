@@ -8,6 +8,10 @@ body {
   font-family: 'Otomanopee One', sans-serif;
 }
 
+.hidden {
+  display: none;
+}
+
 .navbar {
   background-color: black;
 }
@@ -123,6 +127,37 @@ input {
 
 input:focus {
   outline: none;
+}
+
+.workout-container {
+  width: 350px;
+  margin: 0 auto;
+  background-color: white;
+  margin-top: 1.5rem;
+  padding-top: 0.1rem;
+  padding-bottom: 1rem;
+}
+
+.workout-none {
+  color: #6f6f6f;
+  font-size: 1.6rem;
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.workout-name {
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+.workout-detail {
+  font-size: 0.8rem;
+  color: #646464;
+  margin-left: 1rem;
+  margin-top: 0.2rem;
 }
 
 @media all and (min-width: 768px) {
