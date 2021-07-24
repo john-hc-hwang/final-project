@@ -91,6 +91,29 @@ app.post('/api/workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.put('/api/workouts/edit', (req, res, next) => {
+  const { exercise, weight, sets, reps, rest, editId } = req.body;
+  const sql = `
+    update "workouts"
+    set "exercise" = $1,
+        "weight" = $2,
+        "sets" = $3,
+        "reps" = $4,
+        "rest" = $5
+    where "workoutId" = $6
+    returning *
+  `;
+
+  const params = [exercise, weight, sets, reps, rest, editId];
+
+  db.query(sql, params)
+    .then(result => {
+      const [updatedWorkout] = result.rows;
+      res.status(200).json(updatedWorkout);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/workouts/:formatDate', (req, res, next) => {
   const sql = `
     select "workoutId", "exercise", "weight", "sets", "reps", "rest"
@@ -104,6 +127,24 @@ app.get('/api/workouts/:formatDate', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const selectedWorkout = result.rows;
+      res.json(selectedWorkout);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/workouts/edit/:editId', (req, res, next) => {
+  const sql = `
+  select "exercise", "weight", "sets", "reps", "rest"
+  from "workouts"
+  where "workoutId" = $1
+  `;
+
+  const editId = req.params.editId;
+  const params = [editId];
+
+  db.query(sql, params)
+    .then(result => {
+      const [selectedWorkout] = result.rows;
       res.json(selectedWorkout);
     })
     .catch(err => next(err));

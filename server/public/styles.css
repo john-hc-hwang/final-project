@@ -160,6 +160,22 @@ input:focus {
   margin-top: 0.2rem;
 }
 
+.far.fa-edit {
+  float: right;
+  font-size: 1.4rem;
+  margin-top: 0.3rem;
+  cursor: pointer;
+}
+
+.far.fa-trash-alt {
+  float: right;
+  font-size: 1.4rem;
+  margin-right: 1rem;
+  margin-left: 0.4rem;
+  margin-top: 0.3rem;
+  cursor: pointer;
+}
+
 @media all and (min-width: 768px) {
   .container {
     max-width: 900px;
