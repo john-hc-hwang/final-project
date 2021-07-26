@@ -7,6 +7,7 @@ export default class AddWorkout extends React.Component {
       addModalActive: false,
       editModalActive: false,
       editId: '',
+      deleteId: '',
       exercise: '',
       weight: '',
       sets: '',
@@ -33,6 +34,7 @@ export default class AddWorkout extends React.Component {
     this.showEditModal = this.showEditModal.bind(this);
     this.getWorkout = this.getWorkout.bind(this);
     this.getEdit = this.getEdit.bind(this);
+    this.deleteExercise = this.deleteExercise.bind(this);
     this.mapExercise = this.mapExercise.bind(this);
     this.showWorkout = this.showWorkout.bind(this);
   }
@@ -208,20 +210,20 @@ export default class AddWorkout extends React.Component {
   getEdit(event) {
     this.toggleEditModal();
     const editId = event.target.getAttribute('data-edit');
-    this.setState({ editId: editId });
-
-    fetch(`/api/workouts/edit/${editId}`)
-      .then(res => res.json())
-      .then(workout => {
-        this.setState({ exercise: workout.exercise });
-        this.setState({ weight: workout.weight });
-        this.setState({ sets: workout.sets });
-        this.setState({ reps: workout.reps });
-        this.setState({ rest: workout.rest });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    this.setState({ editId: editId }, () => {
+      fetch(`/api/workouts/edit/${editId}`)
+        .then(res => res.json())
+        .then(workout => {
+          this.setState({ exercise: workout.exercise });
+          this.setState({ weight: workout.weight });
+          this.setState({ sets: workout.sets });
+          this.setState({ reps: workout.reps });
+          this.setState({ rest: workout.rest });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
   }
 
   getWorkout() {
@@ -241,11 +243,29 @@ export default class AddWorkout extends React.Component {
       });
   }
 
+  deleteExercise(event) {
+    const deleteId = event.target.getAttribute('data-delete');
+    this.setState({ deleteId: deleteId }, () => {
+      const data = this.state;
+
+      fetch('/api/workouts', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+      this.getWorkout();
+    });
+  }
+
   mapExercise() {
     const contents = this.state.workouts;
     const contentItems = contents.map(content =>
       <div key={ content.workoutId}>
-        <i data-delete={ content.workoutId } className="far fa-trash-alt"></i>
+        <i onClick={ this.deleteExercise } data-delete={ content.workoutId } className="far fa-trash-alt"></i>
         <i onClick={ this.getEdit } data-edit={ content.workoutId } className="far fa-edit"></i>
         <p className="workout-name">{ content.exercise }</p>
         <p className="workout-detail"> { content.weight } lbs | { content.sets } Sets | { content.reps } Reps | { content.rest } Sec Rest</p>

@@ -114,6 +114,23 @@ app.put('/api/workouts/edit', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.delete('/api/workouts', (req, res, next) => {
+  const { deleteId } = req.body;
+  const sql = `
+    delete from "workouts"
+    where "workoutId" = $1
+    returning *
+  `;
+
+  const params = [deleteId];
+
+  db.query(sql, params)
+    .then(result => {
+      res.sendStatus(204);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/workouts/:formatDate', (req, res, next) => {
   const sql = `
     select "workoutId", "exercise", "weight", "sets", "reps", "rest"
