@@ -53,11 +53,7 @@ export default class AddWorkout extends React.Component {
   toggleAddModal() {
     this.setState({ addModalActive: !this.state.addModalActive }, () => {
       if (!this.state.addModalActive) {
-        this.setState({ exercise: '' });
-        this.setState({ weight: '' });
-        this.setState({ sets: '' });
-        this.setState({ reps: '' });
-        this.setState({ rest: '' });
+        this.setState({ exercise: '', weight: '', sets: '', reps: '', rest: '' });
       }
     });
   }
@@ -65,12 +61,7 @@ export default class AddWorkout extends React.Component {
   toggleEditModal() {
     this.setState({ editModalActive: !this.state.editModalActive }, () => {
       if (!this.state.editModalActive) {
-        this.setState({ editId: '' });
-        this.setState({ exercise: '' });
-        this.setState({ weight: '' });
-        this.setState({ sets: '' });
-        this.setState({ reps: '' });
-        this.setState({ rest: '' });
+        this.setState({ editId: '', exercise: '', weight: '', sets: '', reps: '', rest: '' });
       }
     });
   }
@@ -228,11 +219,7 @@ export default class AddWorkout extends React.Component {
       fetch(`/api/workouts/edit/${editId}`)
         .then(res => res.json())
         .then(workout => {
-          this.setState({ exercise: workout.exercise });
-          this.setState({ weight: workout.weight });
-          this.setState({ sets: workout.sets });
-          this.setState({ reps: workout.reps });
-          this.setState({ rest: workout.rest });
+          this.setState({ exercise: workout.exercise, weight: workout.weight, sets: workout.sets, reps: workout.reps, rest: workout.rest });
         })
         .catch(error => {
           console.error('Error:', error);
