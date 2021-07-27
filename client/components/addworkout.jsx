@@ -1,5 +1,6 @@
 import React from 'react';
 import Calendar from 'react-calendar';
+import moment from 'moment';
 export default class AddWorkout extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +17,8 @@ export default class AddWorkout extends React.Component {
       date: new Date(),
       completed: false,
       excuse: '',
-      workouts: []
+      workouts: [],
+      completedDates: []
     };
 
     this.toggleAddModal = this.toggleAddModal.bind(this);
@@ -33,15 +35,18 @@ export default class AddWorkout extends React.Component {
     this.showAddModal = this.showAddModal.bind(this);
     this.showEditModal = this.showEditModal.bind(this);
     this.getWorkout = this.getWorkout.bind(this);
+    this.getCompleted = this.getCompleted.bind(this);
     this.getEdit = this.getEdit.bind(this);
     this.deleteExercise = this.deleteExercise.bind(this);
     this.mapExercise = this.mapExercise.bind(this);
     this.showWorkout = this.showWorkout.bind(this);
+    this.toggleComplete = this.toggleComplete.bind(this);
   }
 
   // when it mounts, fetch data and show for specific date
   componentDidMount() {
     this.getWorkout();
+    this.getCompleted();
   }
 
   toggleAddModal() {
@@ -85,6 +90,7 @@ export default class AddWorkout extends React.Component {
   setDate(target) {
     this.setState({ date: target }, () => {
       this.getWorkout();
+      this.getCompleted();
     });
   }
 
@@ -116,20 +122,20 @@ export default class AddWorkout extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
+      .then(result => {
+        this.getWorkout();
+        this.toggleAddModal();
+        this.setState({
+          exercise: '',
+          weight: '',
+          sets: '',
+          reps: '',
+          rest: ''
+        });
+      })
       .catch(error => {
         console.error('Error:', error);
       });
-
-    this.getWorkout();
-
-    this.toggleAddModal();
-    this.setState({
-      exercise: '',
-      weight: '',
-      sets: '',
-      reps: '',
-      rest: ''
-    });
 
     event.preventDefault();
   }
@@ -142,13 +148,13 @@ export default class AddWorkout extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
+      .then(result => {
+        this.getWorkout();
+        this.toggleEditModal();
+      })
       .catch(error => {
         console.error('Error:', error);
       });
-
-    this.getWorkout();
-
-    this.toggleEditModal();
 
     event.preventDefault();
   }
@@ -243,6 +249,29 @@ export default class AddWorkout extends React.Component {
       });
   }
 
+  getCompleted() {
+    const date = this.getDate().split(' ');
+    date.unshift(date[2]);
+    date.splice(3, 1);
+    const formatDate = date.join('-');
+    const newDate = `${formatDate}T00:00:00Z`;
+
+    fetch(`/api/workouts/complete/${newDate}`)
+      .then(res => res.json())
+      .then(complete => {
+        if (complete.length === 0) {
+          this.setState({ completed: false });
+        } else if (complete[0].completed) {
+          this.setState({ completed: true });
+        } else {
+          this.setState({ completed: false });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
   deleteExercise(event) {
     const deleteId = event.target.getAttribute('data-delete');
     this.setState({ deleteId: deleteId }, () => {
@@ -291,13 +320,62 @@ export default class AddWorkout extends React.Component {
     }
   }
 
+  toggleComplete() {
+    this.setState({ completed: !this.state.completed }, () => {
+      const data = this.state;
+
+      const date = this.getDate().split(' ');
+      date.unshift(date[2]);
+      date.splice(3, 1);
+      const formatDate = date.join('-');
+      const newDate = `${formatDate}T00:00:00Z`;
+
+      fetch(`/api/workouts/complete/${newDate}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(complete => {
+          if (complete[0]) {
+            const date = this.getDate().split(' ');
+            date.unshift(date[1]);
+            date.splice(2, 1);
+            const newDate = date.join('-');
+
+            const tempArr = this.state.completedDates.map(x => x);
+            if (complete[0].completed && !tempArr.includes(newDate)) {
+              tempArr.push(newDate);
+              this.setState({ completedDates: tempArr });
+            }
+
+            if (!complete[0].completed && tempArr.includes(newDate)) {
+              tempArr.splice(tempArr.indexOf(newDate), 1);
+              this.setState({ completedDates: tempArr });
+            }
+          } else {
+            this.setState({ completed: !this.state.completed });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  }
+
   render() {
     return (
       <>
         <button onClick={ this.toggleAddModal } className="main-button">Add Workout</button>
+        <button onClick={ this.toggleComplete } className="main-button">{ this.state.completed ? 'Undo' : 'Complete' }</button>
         { this.showAddModal() }
         { this.showEditModal() }
-        <Calendar onChange={ this.setDate } value={this.state.date} />
+        <Calendar onChange={ this.setDate } value={this.state.date}
+        tileClassName={({ date, view }) => {
+          if (this.state.completedDates.find(x => x === moment(date).format('DD-MM-YYYY'))) {
+            return 'complete';
+          }
+        }}/>
         { this.showWorkout() }
       </>
     );
