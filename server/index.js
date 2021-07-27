@@ -17,61 +17,6 @@ const app = express();
 app.use(staticMiddleware);
 app.use(jsonMiddleware);
 
-// example below
-// endpoint
-
-// app.get('/api/workout', (req, res) => {
-
-// someId needs to be sent back with data ITS A MUST
-//   const sql = `
-//     select
-//       "someId"
-//       "columnName1",
-//       "columnName2",
-//       "columnName3"
-//     from "tableName"
-//     join "tableName" using ("someId");
-//   `;
-
-//   db.query(sql)
-//     .then(result => {
-//       const workouts = result.rows;
-//       res.json(workouts);
-//     });
-// });
-
-// jsx exmaple below
-// frontend method
-
-// getTodos() {
-//   fetch('api/workout')
-//     .then(res => res.json())
-//     .then(workouts => {
-//       this.setState({ stateName: workouts })
-// workouts is an array (result.rows)
-//     });
-// }
-
-// render return example
-// render() {
-//   const { workouts } = this.state;
-
-//   return (
-//     <ul>
-//       {
-//         workouts.map(workout => (
-//           <li key={workout.workoutId}>
-//             <h5>{ workout.name }</h5>
-//             <p>{ workout.details }</p>
-//             <p>{ workout.columnName }</p>
-//           </li>
-//         ))
-//       }
-//     </ul>
-//   )
-// }
-// Note end
-
 app.post('/api/workouts', (req, res, next) => {
   const sql = `
     insert into "workouts" ("userId", "exercise", "weight", "sets", "reps", "rest", "date", "completed", "excuse")
@@ -148,6 +93,20 @@ app.delete('/api/workouts', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       res.sendStatus(204);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/workouts/completedDates', (req, res, next) => {
+  const sql = `
+    select "date", "completed"
+    from "workouts"
+  `;
+
+  db.query(sql)
+    .then(result => {
+      const completedDates = result.rows;
+      res.json(completedDates);
     })
     .catch(err => next(err));
 });
