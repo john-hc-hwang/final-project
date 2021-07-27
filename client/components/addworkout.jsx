@@ -67,23 +67,9 @@ export default class AddWorkout extends React.Component {
   }
 
   getDate() {
-    let month = '';
-    let day = '';
-
-    if ((this.state.date.getMonth() + 1).toString().length < 2) {
-      month = `0${this.state.date.getMonth() + 1}`;
-    } else {
-      month = this.state.date.getMonth() + 1;
-    }
-
-    if ((this.state.date.getDate()).toString().length < 2) {
-      day = `0${this.state.date.getDate()}`;
-    } else {
-      day = this.state.date.getDate();
-    }
-
-    const date = `${month} ${day} ${this.state.date.getFullYear()}`;
-    return date;
+    const date = moment(this.state.date).format('MM-DD-YYYY');
+    const newDate = date.split('-').join(' ');
+    return newDate;
   }
 
   setDate(target) {
@@ -241,6 +227,7 @@ export default class AddWorkout extends React.Component {
       });
   }
 
+  // complete and UNDO for a specific date
   getCompleted() {
     const date = moment(this.state.date).format('YYYY-MM-DD');
     const formattedDate = `${date}T00:00:00Z`;
@@ -302,17 +289,17 @@ export default class AddWorkout extends React.Component {
   }
 
   mapExercise() {
-    const contents = this.state.workouts;
-    const contentItems = contents.map(content =>
-      <div key={ content.workoutId}>
-        <i onClick={ this.deleteExercise } data-delete={ content.workoutId } className="far fa-trash-alt"></i>
-        <i onClick={ this.getEdit } data-edit={ content.workoutId } className="far fa-edit"></i>
-        <p className="workout-name">{ content.exercise }</p>
-        <p className="workout-detail"> { content.weight } lbs | { content.sets } Sets | { content.reps } Reps | { content.rest } Sec Rest</p>
+    const workouts = this.state.workouts;
+    const workoutItems = workouts.map(workout =>
+      <div key={ workout.workoutId}>
+        <i onClick={ this.deleteExercise } data-delete={ workout.workoutId } className="far fa-trash-alt"></i>
+        <i onClick={ this.getEdit } data-edit={ workout.workoutId } className="far fa-edit"></i>
+        <p className="workout-name">{ workout.exercise }</p>
+        <p className="workout-detail"> { workout.weight } lbs | { workout.sets } Sets | { workout.reps } Reps | { workout.rest } Sec Rest</p>
       </div>
     );
 
-    return contentItems;
+    return workoutItems;
   }
 
   showWorkout() {
@@ -331,6 +318,8 @@ export default class AddWorkout extends React.Component {
     }
   }
 
+  // Add to array if completed is true and doesn't already include the date (accounts for duplicate dates)
+  // Remove from array if completed is false and already included
   toggleComplete() {
     this.setState({ completed: !this.state.completed }, () => {
       const date = moment(this.state.date).format('YYYY-MM-DD');
