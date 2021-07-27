@@ -114,6 +114,27 @@ app.put('/api/workouts/edit', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.put('/api/workouts/complete/:formatDate', (req, res, next) => {
+  const sql = `
+    update "workouts"
+      set "completed" = $1
+    where "date" = $2
+    returning "completed", "date"
+  `;
+
+  const { completed } = req.body;
+  const date = req.params.formatDate;
+
+  const params = [completed, date];
+
+  db.query(sql, params)
+    .then(result => {
+      const completedWorkout = result.rows;
+      res.status(200).json(completedWorkout);
+    })
+    .catch(err => next(err));
+});
+
 app.delete('/api/workouts', (req, res, next) => {
   const { deleteId } = req.body;
   const sql = `
@@ -127,6 +148,24 @@ app.delete('/api/workouts', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       res.sendStatus(204);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/workouts/complete/:formatDate', (req, res, next) => {
+  const sql = `
+    select "completed"
+    from "workouts"
+    where "date" = $1
+  `;
+
+  const date = req.params.formatDate;
+  const params = [date];
+
+  db.query(sql, params)
+    .then(result => {
+      const completedWorkout = result.rows;
+      res.json(completedWorkout);
     })
     .catch(err => next(err));
 });

@@ -57,7 +57,7 @@ body {
   color: #fd0;
   background-color: black;
   padding: 0.5rem 1rem;
-  margin: 1rem 1rem;
+  margin: 1rem 0.4rem;
   border-style: none;
   border-radius: 2rem;
   cursor: pointer;
@@ -174,6 +174,11 @@ input:focus {
   margin-left: 0.4rem;
   margin-top: 0.3rem;
   cursor: pointer;
+}
+
+.complete {
+  color: black;
+  background-color: #60ff1f;
 }
 
 @media all and (min-width: 768px) {
