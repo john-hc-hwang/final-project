@@ -239,8 +239,8 @@ export default class AddWorkout extends React.Component {
           <div className="modal-container">
             <div className="modal-options">
               <button className="modal-button" onClick={ this.toggleExcuseModal }>Cancel</button>
-              <p className="modal-title">New Excuse</p>
-              <button className="modal-button">Add</button>
+              <p className="modal-title">{ this.state.excuse === '' ? 'New Excuse' : 'Edit Excuse'}</p>
+              <button className="modal-button">{ this.state.excuse === '' ? 'Add' : 'Save'}</button>
             </div>
             <p className="modal-date">{ this.getDate() }</p>
             <label className="text-center" htmlFor="excuseInput">I can&apos;t workout today because...</label>
