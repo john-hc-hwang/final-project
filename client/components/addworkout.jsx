@@ -7,6 +7,7 @@ export default class AddWorkout extends React.Component {
     this.state = {
       addModalActive: false,
       editModalActive: false,
+      excuseModalActive: false,
       editId: '',
       deleteId: '',
       exercise: '',
@@ -23,6 +24,7 @@ export default class AddWorkout extends React.Component {
 
     this.toggleAddModal = this.toggleAddModal.bind(this);
     this.toggleEditModal = this.toggleEditModal.bind(this);
+    this.toggleExcuseModal = this.toggleExcuseModal.bind(this);
     this.getDate = this.getDate.bind(this);
     this.setDate = this.setDate.bind(this);
     this.setExercise = this.setExercise.bind(this);
@@ -30,21 +32,27 @@ export default class AddWorkout extends React.Component {
     this.setSets = this.setSets.bind(this);
     this.setReps = this.setReps.bind(this);
     this.setRest = this.setRest.bind(this);
+    this.setExcuse = this.setExcuse.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleExcuse = this.handleExcuse.bind(this);
     this.showAddModal = this.showAddModal.bind(this);
     this.showEditModal = this.showEditModal.bind(this);
+    this.showExcuseModal = this.showExcuseModal.bind(this);
     this.getWorkout = this.getWorkout.bind(this);
+    this.getExcuse = this.getExcuse.bind(this);
     this.getCompleted = this.getCompleted.bind(this);
     this.getCompletedDates = this.getCompletedDates.bind(this);
     this.getEdit = this.getEdit.bind(this);
     this.deleteExercise = this.deleteExercise.bind(this);
     this.mapExercise = this.mapExercise.bind(this);
     this.showWorkout = this.showWorkout.bind(this);
+    this.showExcuse = this.showExcuse.bind(this);
     this.toggleComplete = this.toggleComplete.bind(this);
   }
 
   componentDidMount() {
+    this.getExcuse();
     this.getWorkout();
     this.getCompleted();
     this.getCompletedDates();
@@ -66,6 +74,10 @@ export default class AddWorkout extends React.Component {
     });
   }
 
+  toggleExcuseModal() {
+    this.setState({ excuseModalActive: !this.state.excuseModalActive });
+  }
+
   getDate() {
     const date = moment(this.state.date).format('MM-DD-YYYY');
     const newDate = date.split('-').join(' ');
@@ -74,6 +86,7 @@ export default class AddWorkout extends React.Component {
 
   setDate(target) {
     this.setState({ date: target }, () => {
+      this.getExcuse();
       this.getWorkout();
       this.getCompleted();
     });
@@ -99,6 +112,10 @@ export default class AddWorkout extends React.Component {
     this.setState({ rest: event.target.value });
   }
 
+  setExcuse(event) {
+    this.setState({ excuse: event.target.value });
+  }
+
   handleAdd(event) {
     const data = this.state;
 
@@ -110,13 +127,6 @@ export default class AddWorkout extends React.Component {
       .then(result => {
         this.getWorkout();
         this.toggleAddModal();
-        this.setState({
-          exercise: '',
-          weight: '',
-          sets: '',
-          reps: '',
-          rest: ''
-        });
       })
       .catch(error => {
         console.error('Error:', error);
@@ -136,6 +146,30 @@ export default class AddWorkout extends React.Component {
       .then(result => {
         this.getWorkout();
         this.toggleEditModal();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+    event.preventDefault();
+  }
+
+  handleExcuse() {
+    const data = this.state;
+
+    const date = moment(this.state.date).format('YYYY-MM-DD');
+    const formattedDate = `${date}T00:00:00Z`;
+
+    fetch(`/api/workouts/excuse/${formattedDate}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(result => {
+        this.getExcuse();
+        this.toggleExcuseModal();
+        this.setState({ excuse: '' });
       })
       .catch(error => {
         console.error('Error:', error);
@@ -198,6 +232,25 @@ export default class AddWorkout extends React.Component {
     }
   }
 
+  showExcuseModal() {
+    if (this.state.excuseModalActive) {
+      return (
+        <form onSubmit={ this.handleExcuse } className="overlay">
+          <div className="modal-container">
+            <div className="modal-options">
+              <button className="modal-button" onClick={ this.toggleExcuseModal }>Cancel</button>
+              <p className="modal-title">New Excuse</p>
+              <button className="modal-button">Add</button>
+            </div>
+            <p className="modal-date">{ this.getDate() }</p>
+            <label className="text-center" htmlFor="excuseInput">I can&apos;t workout today because...</label>
+            <textarea required id="excuseInput" cols="20" rows="10" value={ this.state.excuse } onChange={ this.setExcuse }></textarea>
+          </div>
+        </form>
+      );
+    }
+  }
+
   getEdit(event) {
     this.toggleEditModal();
     const editId = event.target.getAttribute('data-edit');
@@ -221,6 +274,24 @@ export default class AddWorkout extends React.Component {
       .then(res => res.json())
       .then(workout => {
         this.setState({ workouts: workout });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  getExcuse() {
+    const date = moment(this.state.date).format('YYYY-MM-DD');
+    const formattedDate = `${date}T00:00:00Z`;
+
+    fetch(`/api/workouts/excuse/${formattedDate}`)
+      .then(res => res.json())
+      .then(excuses => {
+        if (excuses[0]) {
+          this.setState({ excuse: excuses[0].excuse });
+        } else {
+          this.setState({ excuse: '' });
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -318,6 +389,23 @@ export default class AddWorkout extends React.Component {
     }
   }
 
+  showExcuse() {
+    if (this.state.excuse === '') {
+      return (
+        <div className="excuse-container">
+          <p className="excuse-none">No Excuses !</p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="excuse-container">
+          <p className="excuse-name">My excuse is ...</p>
+          <p className="excuse-detail">{ this.state.excuse }</p>
+        </div>
+      );
+    }
+  }
+
   // Add to array if completed is true and doesn't already include the date (accounts for duplicate dates)
   // Remove from array if completed is false and already included
   toggleComplete() {
@@ -360,10 +448,14 @@ export default class AddWorkout extends React.Component {
   render() {
     return (
       <>
-        <button onClick={ this.toggleAddModal } className="main-button">Add Workout</button>
-        <button onClick={ this.toggleComplete } className="main-button">{ this.state.completed ? 'Undo' : 'Complete' }</button>
+        <div className="button-container">
+          <button onClick={ this.toggleAddModal } className="main-button">+ Workout</button>
+          <button onClick={ this.toggleComplete } className="main-button">{ this.state.completed ? 'Undo' : 'Complete' }</button>
+          <button onClick={ this.toggleExcuseModal } className="main-button">Excuse</button>
+        </div>
         { this.showAddModal() }
         { this.showEditModal() }
+        { this.showExcuseModal() }
         <Calendar onChange={ this.setDate } value={this.state.date}
         tileClassName={({ date, view }) => {
           if (this.state.completedDates.find(x => x === moment(date).format('DD-MM-YYYY'))) {
@@ -371,6 +463,7 @@ export default class AddWorkout extends React.Component {
           }
         }}/>
         { this.showWorkout() }
+        { this.showExcuse() }
       </>
     );
   }
