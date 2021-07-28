@@ -59,6 +59,27 @@ app.put('/api/workouts/edit', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.put('/api/workouts/excuse/:formatDate', (req, res, next) => {
+  const sql = `
+    update "workouts"
+      set "excuse" = $1
+    where "date" = $2
+    returning "excuse", "date"
+  `;
+
+  const { excuse } = req.body;
+  const date = req.params.formatDate;
+
+  const params = [excuse, date];
+
+  db.query(sql, params)
+    .then(result => {
+      const [excuses] = result.rows;
+      res.status(200).json(excuses);
+    })
+    .catch(err => next(err));
+});
+
 app.put('/api/workouts/complete/:formatDate', (req, res, next) => {
   const sql = `
     update "workouts"
@@ -125,6 +146,24 @@ app.get('/api/workouts/complete/:formatDate', (req, res, next) => {
     .then(result => {
       const completedWorkout = result.rows;
       res.json(completedWorkout);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/workouts/excuse/:formatDate', (req, res, next) => {
+  const sql = `
+    select "excuse"
+    from "workouts"
+    where "date" = $1
+  `;
+
+  const date = req.params.formatDate;
+  const params = [date];
+
+  db.query(sql, params)
+    .then(result => {
+      const excuse = result.rows;
+      res.json(excuse);
     })
     .catch(err => next(err));
 });

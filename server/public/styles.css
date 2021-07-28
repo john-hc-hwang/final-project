@@ -52,15 +52,21 @@ body {
 }
 
 .main-button {
-  font-family: 'Otomanopee One', sans-serif;
   font-size: 1rem;
+  font-weight: bold;
   color: #fd0;
   background-color: black;
-  padding: 0.5rem 1rem;
-  margin: 1rem 0.4rem;
+  padding: 0.6rem 0;
+  margin: 1rem 0.2rem;
+  width: 110px;
   border-style: none;
   border-radius: 2rem;
   cursor: pointer;
+}
+
+.button-container {
+  width: 350px;
+  margin: 0 auto;
 }
 
 .overlay {
@@ -118,6 +124,11 @@ label {
   margin: 0.7rem 0;
 }
 
+textarea {
+  font-size: 1.6rem;
+  padding: 0.5rem 0.5rem;
+}
+
 input {
   font-size: 1.4rem;
   padding: 0.6rem 1rem;
@@ -138,7 +149,24 @@ input:focus {
   padding-bottom: 1rem;
 }
 
+.excuse-container {
+  width: 350px;
+  margin: 0 auto;
+  background-color: white;
+  margin-top: 1.5rem;
+  padding-top: 0.1rem;
+  padding-bottom: 1rem;
+}
+
 .workout-none {
+  color: #6f6f6f;
+  font-size: 1.6rem;
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.excuse-none {
   color: #6f6f6f;
   font-size: 1.6rem;
   text-align: center;
@@ -153,11 +181,26 @@ input:focus {
   margin-bottom: 0;
 }
 
+.excuse-name {
+  font-size: 1.6rem;
+  margin-left: 1rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
 .workout-detail {
   font-size: 0.8rem;
   color: #646464;
   margin-left: 1rem;
   margin-top: 0.2rem;
+}
+
+.excuse-detail {
+  font-size: 1.4rem;
+  color: #646464;
+  margin-left: 1rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0;
 }
 
 .far.fa-edit {
@@ -179,6 +222,10 @@ input:focus {
 .complete {
   color: black;
   background-color: #60ff1f;
+}
+
+.text-center {
+  text-align: center;
 }
 
 @media all and (min-width: 768px) {
