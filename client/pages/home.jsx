@@ -40,13 +40,13 @@ export default class Home extends React.Component {
     this.showAddModal = this.showAddModal.bind(this);
     this.showEditModal = this.showEditModal.bind(this);
     this.showExcuseModal = this.showExcuseModal.bind(this);
-    this.deleteExcuse = this.deleteExcuse.bind(this);
     this.getWorkout = this.getWorkout.bind(this);
     this.getExcuse = this.getExcuse.bind(this);
     this.getCompleted = this.getCompleted.bind(this);
     this.getCompletedDates = this.getCompletedDates.bind(this);
     this.getEdit = this.getEdit.bind(this);
     this.deleteExercise = this.deleteExercise.bind(this);
+    this.deleteExcuse = this.deleteExcuse.bind(this);
     this.mapExercise = this.mapExercise.bind(this);
     this.showWorkout = this.showWorkout.bind(this);
     this.showExcuse = this.showExcuse.bind(this);
@@ -259,27 +259,6 @@ export default class Home extends React.Component {
     }
   }
 
-  deleteExcuse() {
-    this.setState({ excuse: '' }, () => {
-      const data = this.state;
-
-      const date = moment(this.state.date).format('YYYY-MM-DD');
-      const formattedDate = `${date}T00:00:00Z`;
-
-      fetch(`/api/workouts/excuse/${formattedDate}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    });
-
-    this.toggleExcuseModal();
-    event.preventDefault();
-  }
-
   getEdit(event) {
     this.toggleEditModal();
     const editId = event.target.getAttribute('data-edit');
@@ -385,6 +364,27 @@ export default class Home extends React.Component {
         });
 
     });
+  }
+
+  deleteExcuse() {
+    this.setState({ excuse: '' }, () => {
+      const data = this.state;
+
+      const date = moment(this.state.date).format('YYYY-MM-DD');
+      const formattedDate = `${date}T00:00:00Z`;
+
+      fetch(`/api/workouts/excuse/${formattedDate}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+
+    this.toggleExcuseModal();
+    event.preventDefault();
   }
 
   mapExercise() {
