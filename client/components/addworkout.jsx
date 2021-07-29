@@ -39,6 +39,7 @@ export default class AddWorkout extends React.Component {
     this.showAddModal = this.showAddModal.bind(this);
     this.showEditModal = this.showEditModal.bind(this);
     this.showExcuseModal = this.showExcuseModal.bind(this);
+    this.deleteExcuse = this.deleteExcuse.bind(this);
     this.getWorkout = this.getWorkout.bind(this);
     this.getExcuse = this.getExcuse.bind(this);
     this.getCompleted = this.getCompleted.bind(this);
@@ -75,7 +76,12 @@ export default class AddWorkout extends React.Component {
   }
 
   toggleExcuseModal() {
-    this.setState({ excuseModalActive: !this.state.excuseModalActive });
+    this.setState({ excuseModalActive: !this.state.excuseModalActive }, () => {
+      if (!this.state.excuseModalActive) {
+        this.getExcuse();
+      }
+    });
+
   }
 
   getDate() {
@@ -245,10 +251,32 @@ export default class AddWorkout extends React.Component {
             <p className="modal-date">{ this.getDate() }</p>
             <label className="text-center" htmlFor="excuseInput">I can&apos;t workout today because...</label>
             <textarea required id="excuseInput" cols="20" rows="10" value={ this.state.excuse } onChange={ this.setExcuse }></textarea>
+            <p onClick={ this.deleteExcuse } className={ this.state.excuse === '' ? 'hidden' : 'delete-button'}>Delete Excuse</p>
           </div>
         </form>
       );
     }
+  }
+
+  deleteExcuse() {
+    this.setState({ excuse: '' }, () => {
+      const data = this.state;
+
+      const date = moment(this.state.date).format('YYYY-MM-DD');
+      const formattedDate = `${date}T00:00:00Z`;
+
+      fetch(`/api/workouts/excuse/${formattedDate}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+
+    this.toggleExcuseModal();
+    event.preventDefault();
   }
 
   getEdit(event) {
