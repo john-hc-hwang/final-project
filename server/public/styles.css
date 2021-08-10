@@ -243,12 +243,6 @@ input:focus {
 
 @media all and (max-height: 667px) {
   .overlay {
-    height: 140%;
-  }
-}
-
-@media all and (max-height: 825px) {
-  .overlay {
-    height: 110%;
+    height: 150%;
   }
 }
