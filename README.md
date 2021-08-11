@@ -7,7 +7,7 @@ A full stack project made using React.js, Node.js, Express.js, npm, HTML, CSS3, 
 
 https://liftrack.herokuapp.com/
 
-# Features
+# Features / Getting Started
 ## Add Workout
 
 ![Animation](https://user-images.githubusercontent.com/79896352/128265794-1450d833-554a-418c-b447-98bb551a5e95.gif)
