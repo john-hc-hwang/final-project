@@ -53,6 +53,7 @@ export default class Home extends React.Component {
     this.toggleComplete = this.toggleComplete.bind(this);
   }
 
+  // when component mounts, set appropriate states using fetch methods
   componentDidMount() {
     this.getExcuse();
     this.getWorkout();
@@ -60,6 +61,7 @@ export default class Home extends React.Component {
     this.getCompletedDates();
   }
 
+  // make sure if add modal is not active, reset appropriate states
   toggleAddModal() {
     this.setState({ addModalActive: !this.state.addModalActive }, () => {
       if (!this.state.addModalActive) {
@@ -68,6 +70,7 @@ export default class Home extends React.Component {
     });
   }
 
+  // make sure if edit modal is not active, reset appropriate states
   toggleEditModal() {
     this.setState({ editModalActive: !this.state.editModalActive }, () => {
       if (!this.state.editModalActive) {
