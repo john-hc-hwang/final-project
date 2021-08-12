@@ -1,13 +1,44 @@
 # Liftrack
 
 Liftrack is a web application for people who want to plan workouts, complete them and keep track of their fitness journey.
-A full stack project made using React.js, Node.js, Express.js, npm, HTML, CSS3, Webpack, Babel, PostgreSQL.
+
+# Technologies Used
+- React.js
+- Node.js
+- Express.js
+- npm
+- HTML
+- CSS3
+- Webpack
+- Babel
+- pgweb
+- PostgreSQL
 
 # Demo
 
 https://liftrack.herokuapp.com/
 
-# Features / Getting Started
+# Getting Started
+- clone repo
+  - git clone <SSH Key>
+- change directory to liftrack folder
+  - cd liftrack
+- install dependencies
+  - npm install
+- create database
+  - createdb <databaseName>
+- database import
+  - npm run db:import
+  - above code will import data.sql and schema.sql in database folder
+- check database connection
+  - sudo service postgresql status
+- connect to database
+  - sudo service postgresql start
+- open pgweb to view database
+  - pgweb
+  - can be viewed at http://0.0.0.0:8081/
+
+# Finished Features List
 ## Add Workout
 
 ![Animation](https://user-images.githubusercontent.com/79896352/128265794-1450d833-554a-418c-b447-98bb551a5e95.gif)
