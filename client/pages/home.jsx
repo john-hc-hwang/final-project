@@ -23,6 +23,7 @@ export default class Home extends React.Component {
       completedDates: []
     };
 
+    // bind methods that use this
     this.toggleAddModal = this.toggleAddModal.bind(this);
     this.toggleEditModal = this.toggleEditModal.bind(this);
     this.toggleExcuseModal = this.toggleExcuseModal.bind(this);
