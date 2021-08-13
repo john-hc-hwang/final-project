@@ -20,25 +20,25 @@ https://liftrack.herokuapp.com/
 
 # Getting Started
 - clone repo
-  - git clone <SSH Key>
+  - `git clone <SSH Key>`
 - change directory to liftrack folder
-  - cd liftrack
+  - `cd liftrack`
 - install dependencies
-  - npm install
+  - `npm install`
 - create database
-  - createdb <databaseName>
+  - `createdb <databaseName>`
 - database import
-  - npm run db:import
+  - `npm run db:import`
   - above code will import data.sql and schema.sql in database folder
 - check database connection
-  - sudo service postgresql status
+  - `sudo service postgresql status`
 - connect to database
-  - sudo service postgresql start
+  - `sudo service postgresql start`
 - open pgweb to view database
-  - pgweb
+  - `pgweb`
   - can be viewed at http://0.0.0.0:8081/
 
-# Finished Features List
+# Feature List
 ## Add Workout
 
 ![Animation](https://user-images.githubusercontent.com/79896352/128265794-1450d833-554a-418c-b447-98bb551a5e95.gif)
@@ -50,3 +50,13 @@ https://liftrack.herokuapp.com/
 ## Make an excuse
 
 ![Animation3](https://user-images.githubusercontent.com/79896352/128266167-54f44339-ab94-4cc3-8722-fc755eaaa868.gif)
+
+# Stretch Feature List
+## Edit Workout
+
+![Animation1](https://user-images.githubusercontent.com/79896352/129305433-2f8be008-a920-419a-8fae-e1eb830c16c1.gif)
+
+## Delete Workout
+
+![Animation2](https://user-images.githubusercontent.com/79896352/129305493-d29fb081-114d-4eef-a419-d5ac21867c59.gif)
+
