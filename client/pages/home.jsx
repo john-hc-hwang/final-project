@@ -95,6 +95,7 @@ export default class Home extends React.Component {
     return newDate;
   }
 
+  // target is the date which is clicked by user
   setDate(target) {
     this.setState({ date: target }, () => {
       this.getExcuse();
