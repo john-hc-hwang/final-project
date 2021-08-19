@@ -104,6 +104,7 @@ export default class Home extends React.Component {
     });
   }
 
+  // Methods to setState below
   setExercise(event) {
     this.setState({ exercise: event.target.value });
   }
@@ -128,6 +129,7 @@ export default class Home extends React.Component {
     this.setState({ excuse: event.target.value });
   }
 
+  // Add workout using fetch POST method
   handleAdd(event) {
     const data = this.state;
 
@@ -147,6 +149,7 @@ export default class Home extends React.Component {
     event.preventDefault();
   }
 
+  // Edit workout using fetch PUT method
   handleEdit() {
     const data = this.state;
 
